@@ -1,4 +1,4 @@
-package chapter_2_creating_and_destroying_objects.static_factory_methods;
+package chapter_2_creating_and_destroying_objects.static_factory_methods.item_1;
 
 import java.util.HashMap;
 import java.util.Map;

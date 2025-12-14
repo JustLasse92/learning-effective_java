@@ -48,3 +48,38 @@ weitere Parameter hinzu, bleiben die Konstruktoren und statischen Fabrikmethoden
 Abwärtskompatibilität zu
 gewährleisten.
 
+# Item 3: Singleton Muster (Kapitel 2 - Elvis.java)
+
+Konstruktoren sind privat, um die Erstellung von Instanzen zu verhindern. Die Singleton-Instanz wird als
+finales, statisches Attribut (`INSTANCE`) gehalten. Diese ist entweder öffentlich oder wird über eine statische
+Fabrikmethode zurückgegeben. Als Alternative kann ein Singleton auch durch ein **Enum** implementiert werden.
+
+Will man sicherstellen, dass über Reflection keine weiteren Instanzen erstellt werden können, so kann der Konstruktor
+eine Exception werfen, wenn bereits eine Instanz existiert.
+
+Fragen:
+
+1. Welchen Vorteil und Nachteile hat ein Singleton-Muster mit einer statischen Fabrikmethode gegenüber ein
+   öffentliches Klassenattribut?
+   Vorteile Klassenvariable:
+    - Durch die API sofort klar, dass es sich um ein Singleton handelt
+    - Leichter umzusetzen, da die Klassenvariable eh Voraussetzung ist Vorteile Fabrikmethode
+    - Im Nachhinein kann die Implementierung ändern kann. Bsp. einen Subtyp zurückgeben oder eine Instanz pro Thread
+      zu erzeugen.
+    - Lazy Initialization ist möglich
+    - Die Fabrikmethode kann als Supplier fungieren, ohne dass die Klasse selbst Supplier implementieren zu müssen.
+      `Supplier<Elvis> s = Elvis::getInstance;`
+
+Trotz der Vorteile der Fabrikmethoden ist das Klassenattribut die gängigere Variante, da sie simpler ist.
+
+# Item 4: Nicht-Instanziierbarkeit durch private Konstruktoren
+
+Manchmal möchte man eine Klasse schreiben, die nur statische Methoden hat. Überwiegend haben diese Klassen ein
+schlechtes Image, da sie nicht objektorientiert sind. Doch es gibt sinnvolle Utilklassen, wenn die Basisklasse nicht
+erweiterbar ist. Beispielsweise wenn es ein primitiver Datentyp oder eine Klasse ist, die man nicht erweitern kann.
+Beispiele sind {@link java.lang.Math} und {@link java.util.Collections}.
+
+Der private Konstruktor kann ein AssertionError werfen, um zu verhindern, dass die Klasse per Reflection
+instanziiert wird.
+
+# Item 5: 
