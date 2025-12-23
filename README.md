@@ -82,4 +82,27 @@ Beispiele sind {@link java.lang.Math} und {@link java.util.Collections}.
 Der private Konstruktor kann ein AssertionError werfen, um zu verhindern, dass die Klasse per Reflection
 instanziiert wird.
 
-# Item 5: 
+# Item 5: Bevorzuge Dependency Injection gegenüber hart kodierten Abhängigkeiten
+
+Man sollte kein Singleton oder eine statische Utility-Klasse verwenden, wenn diese Abhängigkeiten zu anderen Klassen
+hat, die ihr Verhalten beeinflussen. Dies macht die unflexibel und nicht testbar, da die Ressource nicht geändert
+werden kann. Die Ressourcen oder entsprechende Factory-Methoden injizieren werden (über den Konstruktor oder einem
+Dependency Injection Framework wie Spring).
+
+# Item 6: Wiederverwendung von Instanzen gegenüber dem Erzeugen neuer Instanzen
+
+Die Erzeugung einer Instanz ist oft teuer und wenn möglich, sollte eine Instanz wiederverwendet werden. Manchmal ist
+dies nicht leicht zu erkennen, wenn zB. bei Methodenaufrufen neue Instanzen erzeugt werden.
+
+Ebenso muss bei Autoboxing aufgepasst werden, da dies in den meisten Fällen neue Instanzen erzeugt. Primitive
+Datentypen sollten gegenüber ihren Wrapper-Klassen bevorzugt werden, um unnötige Instanziierungen zu vermeiden.
+
+Jedoch muss hier auch der Nutzen abgewogen werden. Eine Instanz zu erzeugen, bei dem der Konstruktor simpel ist,
+Bedarf nur wenig Ressourcen, insbesondere bei modernen JVM Implementierungen. Wenn durch zusätzliche Objekte das
+Programm übersichtlicher, simpler und wartbarer wird, so sollte dies bevorzugt werden. Zudem kann die Verwaltung
+eines eigenen Objektpools zu einer schlechteren Performance führen, als wenn die JVM dies eigenständig optimieren
+kann. Eine klassische Ausnahme sind beispielsweise Datenbankverbindungen, da die Erstellung dieser sehr teuer ist.
+
+Der Leitsatz "Erzeuge kein neues Objekt, wenn du ein bereits vorhandenes Objekt verwenden solltest" steht der
+Leitsatz (Item 50) gegenüber: "Verwende kein vorhandenes Objekt, wenn ein neues Objekt besser geeignet ist". Dies
+kommt aus dem Grundsatz vom Defensive Copying.
