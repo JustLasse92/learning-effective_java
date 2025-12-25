@@ -77,7 +77,7 @@ Trotz der Vorteile der Fabrikmethoden ist das Klassenattribut die gängigere Var
 Manchmal möchte man eine Klasse schreiben, die nur statische Methoden hat. Überwiegend haben diese Klassen ein
 schlechtes Image, da sie nicht objektorientiert sind. Doch es gibt sinnvolle Utilklassen, wenn die Basisklasse nicht
 erweiterbar ist. Beispielsweise wenn es ein primitiver Datentyp oder eine Klasse ist, die man nicht erweitern kann.
-Beispiele sind {@link java.lang.Math} und {@link java.util.Collections}.
+Beispiele sind 'java.lang.Math' und 'link java.util.Collections'.
 
 Der private Konstruktor kann ein AssertionError werfen, um zu verhindern, dass die Klasse per Reflection
 instanziiert wird.
@@ -106,3 +106,42 @@ kann. Eine klassische Ausnahme sind beispielsweise Datenbankverbindungen, da die
 Der Leitsatz "Erzeuge kein neues Objekt, wenn du ein bereits vorhandenes Objekt verwenden solltest" steht der
 Leitsatz (Item 50) gegenüber: "Verwende kein vorhandenes Objekt, wenn ein neues Objekt besser geeignet ist". Dies
 kommt aus dem Grundsatz vom Defensive Copying.
+
+# Item 7 Vermeide Memory Leaks durch nicht verwendete Objekte
+
+Ein Memory Leak entsteht, wenn Objekte im Speicher gehalten werden, obwohl sie nicht mehr benötigt werden.
+Typischerweise entsteht dies, wenn eine Klasse ihren eigenen Speicher verwaltet und Objekte nicht entfernt, die
+nicht mehr benötigt werden.
+
+## Cache
+
+Ein weiterer potenzieller Memory Leak entsteht durch einen Cache. Oft wird dieser durch eine Map realisiert, doch
+selten werden nicht mehr benötigte Objekte daraus entfernt. Eine Möglichkeit ist es eine 'WeakHashMap' zu verwenden,
+die automatisch Einträge entfernt, deren Schlüssel nicht mehr referenziert werden.
+
+## Strong, Soft und Weak References
+
+Solange eine starke Referenz auf ein Objekt existiert, kann der Garbage Collector das Objekt nicht entfernen.
+
+```
+Integer i = 1;
+```
+
+Bei einer **soft Reference** kann der Garbage Collector das referenzierte Objekt entfernen, wenn der Speicher knapp
+wird.
+
+```
+Integer prime = 1;  
+SoftReference<Integer> soft = new SoftReference<Integer>(prime);
+prime = null;
+```
+
+Objekte die nur über eine **weak Reference** referenziert werden, werden vom Garbage Collector im nächsten Zyklus
+entfernt.
+
+```
+Integer prime = 1;  
+WeakReference<Integer> soft = new WeakReference<Integer>(prime);
+prime = null;
+```
+
