@@ -145,3 +145,26 @@ WeakReference<Integer> soft = new WeakReference<Integer>(prime);
 prime = null;
 ```
 
+# Item 8: Vermeide Finalizer und Cleaner
+
+Um Ressourcen freizugeben, sollten stattdessen **try-with-resources** oder explizite 'close()' Methoden von einem '
+AutoCloseable' verwendet werden. Von der Verwendung von Finalizern und Cleanern wird abgeraten. Sie eignen sich
+jedoch als Sicherheitsnetz, falls der Anwender vergisst die close() Methode aufzurufen. Der Nutzen muss dabei mit
+den Kosten abgewogen werden.
+
+## Finalizer
+
+Finalizer ist eine 'java.Objekt' Methode, die vom Garbage Collector (in einem finalizer-Thread) aufgerufen wird, bevor
+das Objekt entfernt wird. Früher wurden die verwendet, um weitere Ressourcen bei der Entfernung eines Objekts
+freizugeben. Seit Java 9 sind diese jedoch depricated, da sie viele Probleme mit sich bringen:
+
+- Unvorhersehbare Ausführungszeit: Der Zeitpunkt der Ausführung ist unbestimmt.
+- Keine Garantie der Ausführung: Es gibt keine Garantie, dass der Finalizer jemals ausgeführt wird.
+- Performance-Overhead: Finalizer können die Garbage Collection verlangsamen.
+- Sicherheitsrisiken: Finalizer können Sicherheitslücken öffnen (finalizer attack), wenn sie nicht richtig implementiert
+
+## Cleaner
+
+Abgesehen vom Finalizer gibt es seit Java 9 die 'Cleaner' Klasse, die eine Alternative darstellt. Diese stellt eine
+statische Klasse dar, bei der sich die Objekte registrieren können, um bei der Entfernung eine Cleanup-Aktion
+auszuführen. Gibt einem mehr Kontrolle über den Thread, doch Probleme bestehen weiterhin.
